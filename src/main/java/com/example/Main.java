@@ -1,5 +1,5 @@
 package com.example;
-
+//R7:B2 change_1
 import java.util.List;
 import java.util.Scanner;
 //some different :)
@@ -16,7 +16,7 @@ public class Main {
             for (int i = 0; i < words.size() - 1; i++) {
                 graph.addEdge(words.get(i), words.get(i + 1));
             }
-
+//R7:B2 change_2
             System.out.println("\n有向图结构如下：");
             graph.printGraph();
             // 绘制图保存
