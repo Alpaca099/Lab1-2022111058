@@ -16,30 +16,33 @@ public class Main {
             for (int i = 0; i < words.size() - 1; i++) {
                 graph.addEdge(words.get(i), words.get(i + 1));
             }
-//R7:B2 change_2
-            System.out.println("\n有向图结构如下：");
-            graph.printGraph();
+////////////////////////////////////////////////////////////////////////
+//展示有向图
+            //System.out.println("\n有向图结构如下：");
+            //graph.printGraph();
+///////////////////////////////////////////////////////////////////////
+//画图
             // 绘制图保存
-            // GraphDraw.drawGraph(graph);
+            GraphDraw.drawGraph(graph);
 
 //////////////////////////////////////////////////////////////////////
-            //桥接词查询
+//桥接词查询
 //            BridgeWordFinder bridgeWordFinder = new BridgeWordFinder(graph);
 //            bridgeWordFinder.findAndPrintBridgeWords();
 
 /// //////////////////////////////////////////////////////////////////
-            // 创建 BridgeWordInserter 对象
-            //BridgeWordInserter inserter = new BridgeWordInserter(graph);
-            // 读取文本文件并处理
-            //String newfilepath = "E:/D/CODE/SE/lab/lab1/lab1/src/main/java/com/example/NewText.txt";
-            //String resultText = inserter.processTextFileWithBridgeWords(newfilepath);
+//根据bridge word生成新文本
+//            //创建 BridgeWordInserter 对象
+//            BridgeWordInserter inserter = new BridgeWordInserter(graph);
+//            String resultText = inserter.processTextFromStdIn();
+//
+//            // 输出生成的新文本到命令行
+//            System.out.println("生成的新文本：");
+//            System.out.println(resultText);
 
-            // 输出生成的新文本
-            //System.out.println("生成的新文本：");
-            //System.out.println(resultText);
-            // 创建 PathCalculator 对象
 
 ///////////////////////////////////////////////////////////////////////
+//最短路径搜索
 //            PathCalculator pathCalculator = new PathCalculator(graph);
 //            // 用户输入查询两个单词之间的最短路径
 //            Scanner scanner = new Scanner(System.in);
@@ -51,20 +54,30 @@ public class Main {
 //            pathCalculator.displayShortestPath(word1, word2);
 
 ///////////////////////////////////////////////////////////////////////
-             //计算 PageRank
+//计算 PageRank
             PageRank pageRank = new PageRank(graph);
             pageRank.calculatePageRank();
             // 打印 PageRank 结果
             pageRank.printPageRankScores();
 
 ////////////////////////////////////////////////////////////////////////
-            // 创建随机游走对象并执行
-//            RandomWalk randomWalk = new RandomWalk(graph);
-//            randomWalk.executeRandomWalk();
+// 创建随机游走对象并执行
+            RandomWalk randomWalk = new RandomWalk(graph);
+            randomWalk.executeRandomWalk();
 
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        }catch (java.io.IOException e) {
+                // 处理文件读取的异常
+                System.err.println("文件读取错误：" + e.getMessage());
+                e.printStackTrace();
+            } catch (NullPointerException e) {
+                // 处理可能的空指针异常
+                System.err.println("出现空指针异常：" + e.getMessage());
+                e.printStackTrace();
+            } catch (Exception e) {
+                // 捕获其他通用异常
+                System.err.println("发生未知错误：" + e.getMessage());
+                e.printStackTrace();
+            }
     }
 }

@@ -11,12 +11,22 @@ public class BridgeWordInserter {
         this.graph = graph;
     }
 
-    // 新增方法，用于从文件读取文本并插入桥接词
-    public String processTextFileWithBridgeWords(String filepath) throws IOException {
-        // 直接调用 TextParser 来读取文本并得到单词列表
-        List<String> words = TextParser.parseTextFile(filepath);
+    // 新增方法，用于从标准输入读取文本并插入桥接词
+    public String processTextFromStdIn() throws IOException {
+        // 使用 Scanner 从标准输入读取文本
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder text = new StringBuilder();
 
-        // 然后调用插入桥接词的功能
+        System.out.println("请输入文本（按 Enter 键确认每一行，输入 EOF 或 Ctrl+D 结束输入）：");
+
+        while (scanner.hasNextLine()) {
+            text.append(scanner.nextLine()).append(" ");
+        }
+
+        // 将读取的文本转换成单词列表
+        List<String> words = TextParser.parseTextFromString(text.toString());
+
+        // 调用插入桥接词的功能
         return insertBridgeWords(words);
     }
 
@@ -45,7 +55,7 @@ public class BridgeWordInserter {
         }
 
         // 最后一个单词加入结果
-        //resultWords.add(words.get(words.size() - 1));
+        resultWords.add(words.get(words.size() - 1));
 
         // 输出生成的新文本
         return String.join(" ", resultWords);

@@ -1,92 +1,100 @@
 package com.example;
 
-
 import java.util.*;
 
 public class PathCalculator {
     private Graph graph;
 
-    // 构造函数，接收图的对象
     public PathCalculator(Graph graph) {
         this.graph = graph;
     }
 
-    // 查找两个单词之间的最短路径
-    public List<String> findShortestPath(String start, String end) {
-        // 初始化距离和前驱节点
+    // 基于 Dijkstra 的所有最短路径查找（适用于权重不同的图）
+    public List<List<String>> findAllShortestPaths(String start, String end) {
         Map<String, Integer> dist = new HashMap<>();
-        Map<String, String> prev = new HashMap<>();
-        PriorityQueue<String> queue = new PriorityQueue<>(Comparator.comparingInt(dist::get));
+        Map<String, List<String>> prevs = new HashMap<>();
+        PriorityQueue<String> pq = new PriorityQueue<>(Comparator.comparingInt(dist::get));
 
-        // 初始化所有节点
+        // 初始化
         for (String vertex : graph.getVertices()) {
-            dist.put(vertex, Integer.MAX_VALUE);  // 初始距离设为最大值
-            prev.put(vertex, null);  // 没有前驱节点
+            dist.put(vertex, Integer.MAX_VALUE);
+            prevs.put(vertex, new ArrayList<>());
         }
-        dist.put(start, 0);  // 起点到起点的距离是 0
-        queue.add(start);
+        dist.put(start, 0);
+        pq.offer(start);
 
-        // 使用 Dijkstra 算法进行最短路径计算
-        while (!queue.isEmpty()) {
-            String current = queue.poll();
+        // Dijkstra 主体
+        while (!pq.isEmpty()) {
+            String current = pq.poll();
+            int currentDist = dist.get(current);
 
-            // 如果当前节点已经是目标节点，结束计算
-            if (current.equals(end)) {
-                break;
-            }
+            for (Map.Entry<String, Integer> neighbor : graph.getEdgesFrom(current).entrySet()) {
+                String next = neighbor.getKey();
+                int weight = neighbor.getValue();
+                int newDist = currentDist + weight;
 
-            // 遍历当前节点的邻居节点
-            Map<String, Integer> neighbors = graph.getEdgesFrom(current);
-            for (Map.Entry<String, Integer> neighbor : neighbors.entrySet()) {
-                String neighborVertex = neighbor.getKey();
-                int newDist = dist.get(current) + neighbor.getValue();
-
-                if (newDist < dist.get(neighborVertex)) {
-                    dist.put(neighborVertex, newDist);
-                    prev.put(neighborVertex, current);
-                    queue.add(neighborVertex);
+                if (newDist < dist.get(next)) {
+                    dist.put(next, newDist);
+                    prevs.get(next).clear();
+                    prevs.get(next).add(current);
+                    pq.offer(next);
+                } else if (newDist == dist.get(next)) {
+                    // 如果有另一条同样长度的路径，也加入前驱节点
+                    prevs.get(next).add(current);
                 }
             }
         }
 
-        // 如果找不到路径，返回空列表
-        List<String> path = new ArrayList<>();
-        for (String at = end; at != null; at = prev.get(at)) {
-            path.add(at);
-        }
+        // 回溯所有路径
+        List<List<String>> allPaths = new ArrayList<>();
+        LinkedList<String> path = new LinkedList<>();
+        backtrack(end, start, prevs, path, allPaths);
+        return allPaths;
+    }
 
-        Collections.reverse(path);  // 路径从终点到起点，反转路径
-        return path.size() == 1 ? new ArrayList<>() : path;  // 如果路径只有终点，说明没找到路径
+    // 回溯路径构造所有路径
+    private void backtrack(String current, String start,
+                           Map<String, List<String>> prevs,
+                           LinkedList<String> path,
+                           List<List<String>> allPaths) {
+        path.addFirst(current);
+        if (current.equals(start)) {
+            allPaths.add(new ArrayList<>(path));
+        } else {
+            for (String prev : prevs.get(current)) {
+                backtrack(prev, start, prevs, path, allPaths);
+            }
+        }
+        path.removeFirst();
     }
 
     // 展示路径
     public void displayShortestPath(String word1, String word2) {
         if (word2 == null || word2.isEmpty()) {
-            // 如果第二个单词为空，计算第一个单词到图中其他所有单词的最短路径
-            System.out.println("展示从 " + "\"" +word1 + "\"" +" 到其他单词的最短路径：");
+            System.out.println("展示从 \"" + word1 + "\" 到其他单词的最短路径：");
             for (String vertex : graph.getVertices()) {
                 if (!vertex.equals(word1)) {
-                    List<String> path = findShortestPath(word1, vertex);
-                    if (path.isEmpty()) {
-                        System.out.println("No path found from " + "\"" +word1 + "\"" +" to " + "\"" +vertex +"\"" + ".");
+                    List<List<String>> paths = findAllShortestPaths(word1, vertex);
+                    if (paths.isEmpty()) {
+                        System.out.println("No path found from \"" + word1 + "\" to \"" + vertex + "\".");
                     } else {
-                        System.out.println("The shortest path from " + "\"" +word1 + "\"" +" to " + "\"" +vertex + "\"" +" is: ");
-                        System.out.println(String.join(" -> ", path));
+                        System.out.println("\nThe shortest paths from \"" + word1 + "\" to \"" + vertex + "\" are:");
+                        for (List<String> path : paths) {
+                            System.out.println(String.join(" -> ", path));
+                        }
                     }
                 }
             }
         } else {
-            // 否则计算从 word1 到 word2 的最短路径
-            List<String> path = findShortestPath(word1, word2);
-
-            if (path.isEmpty()) {
-                System.out.println("No path found between " + "\"" +word1 + "\"" +" and " + "\"" +word2 +"\"" + ".");
+            List<List<String>> paths = findAllShortestPaths(word1, word2);
+            if (paths.isEmpty()) {
+                System.out.println("No path found between \"" + word1 + "\" and \"" + word2 + "\".");
             } else {
-                System.out.println("The shortest path from " + "\"" +word1 +"\"" + " to " +"\"" + word2 + "\"" +" is: ");
-                System.out.println(String.join(" -> ", path));
+                System.out.println("The shortest paths from \"" + word1 + "\" to \"" + word2 + "\" are:");
+                for (List<String> path : paths) {
+                    System.out.println(String.join(" -> ", path));
+                }
             }
         }
     }
-
 }
-
