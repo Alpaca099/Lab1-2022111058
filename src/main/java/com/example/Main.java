@@ -1,8 +1,10 @@
 package com.example;
+
 //R7:B2 change_1
 import java.util.List;
 import java.util.Scanner;
 //some different :)
+
 public class Main {
     public static void main(String[] args) {
         try {
@@ -16,51 +18,60 @@ public class Main {
             for (int i = 0; i < words.size() - 1; i++) {
                 graph.addEdge(words.get(i), words.get(i + 1));
             }
-////////////////////////////////////////////////////////////////////////
-//展示有向图
-            //System.out.println("\n有向图结构如下：");
-            //graph.printGraph();
-///////////////////////////////////////////////////////////////////////
-//画图
-            // 绘制图保存
-            GraphDraw.drawGraph(graph);
+            
 
 //////////////////////////////////////////////////////////////////////
+//展示有向图
+            System.out.println("\n有向图结构如下：");
+            graph.printGraph();
+///////////////////////////////////////////////////////////////////////
+//画图
+             //绘制图保存
+            GraphDraw.drawGraph(graph);
+
+////////////////////////////////////////////////////////////////////
 //桥接词查询
-//            BridgeWordFinder bridgeWordFinder = new BridgeWordFinder(graph);
-//            bridgeWordFinder.findAndPrintBridgeWords();
 
-/// //////////////////////////////////////////////////////////////////
+            BridgeWordFinder bridgeWordFinder = new BridgeWordFinder(graph);
+            bridgeWordFinder.findAndPrintBridgeWords();
+
+///////////////////////////////////////////////////////////////////
 //根据bridge word生成新文本
-//            //创建 BridgeWordInserter 对象
-//            BridgeWordInserter inserter = new BridgeWordInserter(graph);
-//            String resultText = inserter.processTextFromStdIn();
-//
-//            // 输出生成的新文本到命令行
-//            System.out.println("生成的新文本：");
-//            System.out.println(resultText);
+            //创建 BridgeWordInserter 对象
+            BridgeWordInserter inserter = new BridgeWordInserter(graph);
+            String resultText = inserter.processTextFromStdIn();
+
+            // 输出生成的新文本到命令行
+            System.out.println("生成的新文本：");
+            System.out.println(resultText);
 
 
-///////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
 //最短路径搜索
-//            PathCalculator pathCalculator = new PathCalculator(graph);
-//            // 用户输入查询两个单词之间的最短路径
-//            Scanner scanner = new Scanner(System.in);
-//            System.out.print("请输入第一个单词 (word1): ");
-//            String word1 = scanner.nextLine().toLowerCase();
-//            System.out.print("请输入第二个单词 (word2): ");
-//            String word2 = scanner.nextLine().toLowerCase();
-//            // 查找并展示最短路径
-//            pathCalculator.displayShortestPath(word1, word2);
+            PathCalculator pathCalculator = new PathCalculator(graph);
+            // 用户输入查询两个单词之间的最短路径
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("请输入第一个单词 (word1): ");
+            String word1 = scanner.nextLine().toLowerCase();
+            System.out.print("请输入第二个单词 (word2): ");
+            String word2 = scanner.nextLine().toLowerCase();
+            // 查找并展示最短路径
+            pathCalculator.displayShortestPath(word1, word2);
 
-///////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
 //计算 PageRank
             PageRank pageRank = new PageRank(graph);
             pageRank.calculatePageRank();
+
             // 打印 PageRank 结果
             pageRank.printPageRankScores();
 
-////////////////////////////////////////////////////////////////////////
+            System.out.println(" -------------------------------------------------------------------------------------------------------------------- " );
+            PageRank NewpageRank = new PageRank(graph);
+            NewpageRank.NewcalculatePageRank(words);
+            // 打印 PageRank 结果
+            NewpageRank.printPageRankScores();
+//////////////////////////////////////////////////////////////////////
 // 创建随机游走对象并执行
             RandomWalk randomWalk = new RandomWalk(graph);
             randomWalk.executeRandomWalk();

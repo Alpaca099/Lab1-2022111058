@@ -60,7 +60,7 @@ public class RandomWalk {
     private void saveWalkSequenceToFile(List<String> walkSequence, String outputPath) throws IOException {
         try (FileWriter writer = new FileWriter(outputPath)) {
             for (String node : walkSequence) {
-                writer.write(node + "\n");
+                writer.write(node + " ");
             }
         }
     }

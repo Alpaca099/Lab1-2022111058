@@ -9,8 +9,15 @@ public class Graph {
         List<String> bridgeWords = new ArrayList<>();
 
         // 先判断 word1 和 word2 是否都存在
-        if (!adjacencyMap.containsKey(word1) || !adjacencyMap.containsKey(word2)) {
-            return null;  // 表示找不到节点
+        if (!adjacencyMap.containsKey(word1)) {
+            if (!adjacencyMap.containsKey(word2)) {
+                return Collections.singletonList("no word 1 and no word 2");
+            }
+            return Collections.singletonList("no word 1");  // 表示找不到节点
+        }
+
+        if (!adjacencyMap.containsKey(word2)) {
+            return Collections.singletonList("no word 2");  // 表示找不到节点
         }
 
         // 遍历 word1 出发的所有邻居节点

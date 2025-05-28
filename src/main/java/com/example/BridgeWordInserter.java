@@ -11,7 +11,7 @@ public class BridgeWordInserter {
         this.graph = graph;
     }
 
-    // 新增方法，用于从标准输入读取文本并插入桥接词
+    //用于从标准输入读取文本并插入桥接词
     public String processTextFromStdIn() throws IOException {
         // 使用 Scanner 从标准输入读取文本
         Scanner scanner = new Scanner(System.in);
