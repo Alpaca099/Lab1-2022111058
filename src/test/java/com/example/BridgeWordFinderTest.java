@@ -75,10 +75,10 @@ public class BridgeWordFinderTest {
     }
 
     @Test
-    public void testBothWordsExist_NoBridgeWord() {
-        List<String> result = graph.findBridgeWords("the", "answer");
-        List<String> expected = List.of();
-        printResult(4,"Both words exist, no bridge word", expected, result);
+    public void testWord1NotExist() {
+        List<String> result = graph.findBridgeWords("apple", "answer");
+        List<String> expected = List.of("no word 1");
+        printResult(5,"Word1 not in graph", expected, result);
         assertEquals(expected, result);
     }
 

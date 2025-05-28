@@ -8,13 +8,14 @@ public class PathCalculator {
     public PathCalculator(Graph graph) {
         this.graph = graph;
     }
-
     // 基于 Dijkstra 的所有最短路径查找（适用于权重不同的图）
     public List<List<String>> findAllShortestPaths(String start, String end) {
+        if (!graph.getVertices().contains(start) || !graph.getVertices().contains(end)) {
+            return Collections.emptyList();  // 或者抛出 IllegalArgumentException
+        }
         Map<String, Integer> dist = new HashMap<>();
         Map<String, List<String>> prevs = new HashMap<>();
         PriorityQueue<String> pq = new PriorityQueue<>(Comparator.comparingInt(dist::get));
-
         // 初始化
         for (String vertex : graph.getVertices()) {
             dist.put(vertex, Integer.MAX_VALUE);
@@ -22,7 +23,6 @@ public class PathCalculator {
         }
         dist.put(start, 0);
         pq.offer(start);
-
         // Dijkstra 主体
         while (!pq.isEmpty()) {
             String current = pq.poll();
@@ -44,7 +44,6 @@ public class PathCalculator {
                 }
             }
         }
-
         // 回溯所有路径
         List<List<String>> allPaths = new ArrayList<>();
         LinkedList<String> path = new LinkedList<>();
