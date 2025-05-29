@@ -8,10 +8,10 @@ public class PathCalculator {
     public PathCalculator(Graph graph) {
         this.graph = graph;
     }
-    // 基于 Dijkstra 的所有最短路径查找（适用于权重不同的图）
+    // 基于 Dijkstra 的所有最短路径查找
     public List<List<String>> findAllShortestPaths(String start, String end) {
         if (!graph.getVertices().contains(start) || !graph.getVertices().contains(end)) {
-            return Collections.emptyList();  // 或者抛出 IllegalArgumentException
+            return Collections.emptyList();
         }
         Map<String, Integer> dist = new HashMap<>();
         Map<String, List<String>> prevs = new HashMap<>();
@@ -69,7 +69,7 @@ public class PathCalculator {
 
     // 展示路径
     public void displayShortestPath(String word1, String word2) {
-        if (word2 == null || word2.isEmpty()) {
+        if (word2 == null ) {
             System.out.println("展示从 \"" + word1 + "\" 到其他单词的最短路径：");
             for (String vertex : graph.getVertices()) {
                 if (!vertex.equals(word1)) {

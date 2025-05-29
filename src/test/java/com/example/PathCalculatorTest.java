@@ -51,16 +51,17 @@ public class PathCalculatorTest {
         return Arrays.asList(outputStream.toString().split("\\R"));
     }
 
+
     private void printResult(Integer caseID, String caseName, List<String> expected, List<String> actual) {
         System.out.println("==== " + "TC" + caseID + ":" + caseName + " ====\nExpected: " + expected + "\nActual:   " + actual + "\n");
     }
-
+    //expect是否在actual中
     private void assertOutputContainsAll(List<String> actual, List<String> expectedLines) {
         for (String expected : expectedLines) {
             assertTrue(actual.stream().anyMatch(line -> line.contains(expected)), "Missing expected line: " + expected);
         }
     }
-
+    //actual是否在expect中
     private void assertNoUnexpectedPaths(List<String> actual, List<String> expectedLines) {
         List<String> actualPaths = extractPathsFromOutput(actual);
         for (String path : actualPaths) {
@@ -174,4 +175,39 @@ public class PathCalculatorTest {
         assertOutputContainsAll(output, expectedLines);
         assertNoUnexpectedPaths(output, expectedLines);
     }
+
+    @Test
+    public void testTC8_AnswerToNull() {
+        List<String> output = captureDisplayOutput("answer",null);
+        List<String> expectedLines = List.of(
+                "No path found from \"answer\" to \"new\".",
+                "No path found from \"answer\" to \"worlds\".",
+                "No path found from \"answer\" to \"explore\".",
+                        "No path found from \"answer\" to \"seek\".",
+                        "No path found from \"answer\" to \"strange\".",
+                        "No path found from \"answer\" to \"life\".",
+                        "No path found from \"answer\" to \"out\".",
+                        "No path found from \"answer\" to \"the\".",
+                        "No path found from \"answer\" to \"find\".",
+                        "No path found from \"answer\" to \"and\".",
+                        "No path found from \"answer\" to \"to\".",
+                        "No path found from \"answer\" to \"civilizations\".");
+        printResult(8, "and to answer", expectedLines, output);
+        assertOutputContainsAll(output, expectedLines);
+        assertNoUnexpectedPaths(output, expectedLines);
+    }
+
+    @Test
+    public void testTC9_EmptyGraph() {
+        // 使用空图替代 setUp 中默认构造的有边图
+        graph = new Graph(); // 不添加任何边
+        calculator = new PathCalculator(graph);
+
+        List<String> output = captureDisplayOutput("out", "answer");
+        List<String> expectedLines = List.of("No path found between \"out\" and \"answer\".");
+        printResult(9, "empty graph start to end", expectedLines, output);
+        assertOutputContainsAll(output, expectedLines);
+        assertNoUnexpectedPaths(output, expectedLines);
+    }
+
 }
